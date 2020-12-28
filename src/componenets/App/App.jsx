@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Switch, Route, BrowserRouter as Router} from 'react-router-dom';
 import {PrivateRoute} from '../PrivateRoute';
-// import LoginPage from '../Login/Login';
+import LoginPage from '../Login/Login';
 // import AdminLoginPage from '../Login/AdminLogin';
 // import RegisterPage from '../Register/Register';
 // import DetailedView from '../SpotsInformation/AdminView';
