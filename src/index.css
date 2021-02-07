@@ -11,3 +11,20 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+#loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 25em;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.btn-right {
+  float: right;
+}
+
+#submit-button {
+  width: 100%;
+}
