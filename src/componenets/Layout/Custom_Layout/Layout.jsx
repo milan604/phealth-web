@@ -59,7 +59,7 @@ export default class CustomLayout extends Component {
             {this.props.children}
           </Content>
           <Footer style={{textAlign: 'center'}}>
-            Ant Design ©2018 Created by Ant UED
+            MSRSN Corporation ©2021 Created by Sahas Dangol
           </Footer>
         </Layout>
       </Layout>
