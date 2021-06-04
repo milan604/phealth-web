@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { baseURL } from '../constants/backendserver.constants.js'
+import { baseURL } from '../constants/backendserver.constant.js'
 import { error } from '../helpers/Notification'
 import Cookie from "js.cookie";
 
