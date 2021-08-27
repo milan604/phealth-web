@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
-// import {bookActions} from '../../actions/bookActions';
 import {Table, Divider, Modal, Tooltip} from 'antd';
 import Show from './Show';
 import Edit from './Edit';
 import {Link} from 'react-router-dom';
 import {EyeOutlined, EditOutlined, DeleteOutlined} from '@ant-design/icons';
 import {success, error} from '../../helpers/Notification';
+import { videoActions } from "../../actions/VideoActions";
 
 const {confirm} = Modal;
 
@@ -13,53 +13,53 @@ export default class List extends Component {
   constructor (props) {
     super (props);
     this.state = {
-      books: props.table_data,
+      videos: props.table_data,
       editVisible: false,
       showVisible: false,
       editButton: false,
-      book: {},
+      video: {},
     };
   }
 
-  setShowModalVisible = book => {
+  setShowModalVisible = video => {
     this.setState ({showVisible: true});
-    this.setState ({book});
+    this.setState ({video});
   };
 
-  setEditModalVisible = book => {
+  setEditModalVisible = video => {
     this.setState ({editVisible: true});
-    this.setState ({book});
+    this.setState ({video});
   };
 
   handleCancel = () => {
     this.setState ({editVisible: false, showVisible: false});
   };
 
-  // deleteBook = bookId => {
-  //   bookActions.deleteBook (bookId).then (response => {
-  //     if (response.status === 204) {
-  //       bookActions.fetchBooks ().then (response => {
-  //         this.setState ({books: response.data});
-  //         success ('Book has been sucessfully deleted.');
-  //       });
-  //     } else {
-  //       error (
-  //         response.data.error || 'Something went wrong. Please try again.'
-  //       );
-  //     }
-  //   });
-  // };
+  deleteVideo = videoId => {
+    videoActions.deleteVideo(videoId).then (response => {
+      if (response.status === 200) {
+        videoActions.fetchVideos ().then (response => {
+          this.setState ({videos: response.data});
+          success ('Video has been sucessfully deleted.');
+        });
+      } else {
+        error (
+          response.data.error || 'Something went wrong. Please try again.'
+        );
+      }
+    });
+  };
 
-  // showConfirm = book => {
-  //   confirm ({
-  //     title: 'Do you Want to delete this book ?',
-  //     content: `Book title =>  ${book.title}`,
-  //     onOk: () => this.deleteBook (book.id),
-  //     onCancel () {
-  //       console.log ('Cancel');
-  //     },
-  //   });
-  // };
+  showConfirm = video => {
+    confirm ({
+      title: 'Do you Want to delete this video ?',
+      content: `Video title =>  ${video.title}`,
+      onOk: () => this.deleteVideo(video.id),
+      onCancel () {
+        console.log ('Cancel');
+      },
+    });
+  };
 
   formatValues = values => {
     Object.entries (values).forEach (([key, value]) => {
@@ -70,47 +70,36 @@ export default class List extends Component {
     return values;
   };
 
-  handleEdit = e => {
-    // e.preventDefault ();
-    // const {form} = this.formRef.props;
-    // form.validateFields ((err, values) => {
-    //   if (!err) {
-    //     this.setState ({editButton: true});
-    //     bookActions
-    //       .updateBook (
-    //         this.formatValues (values),
-    //         this.state.book.id
-    //       )
-    //       .then (response => {
-    //         if (response.status === 200) {
-    //           bookActions.fetchBooks ().then (response => {
-    //             this.setState ({
-    //               books: response.data,
-    //               editVisible: false,
-    //             });
-    //           });
-    //           success ('Book has been sucessfully updated.');
-    //         } else {
-    //           error (
-    //             response.data.error || 'Something went wrong. Please try again.'
-    //           );
-    //         }
-    //         this.setState ({editButton: false});
-    //       });
-    //   }
-    // });
+  handleEdit = (values) => {
+    this.setState({ editButton: true });
+        videoActions.updateVideo(values, this.state.video.id).then((response) => {
+          if (response.status === 200) {
+            videoActions.fetchVideos().then((response) => {
+              this.setState({
+                videos: response.data,
+                editVisible: false,
+              });
+            });
+            success("Video has been sucessfully updated.");
+          } else {
+            error(
+              response.data.error || "Something went wrong. Please try again."
+            );
+          }
+          this.setState({ editButton: false });
+        });
   };
 
   componentDidUpdate (prevProps) {
     if (this.props.table_data !== prevProps.table_data) {
-      this.setState ({books: this.props.table_data});
+      this.setState ({videos: this.props.table_data});
     }
   }
 
   render () {
     const columns = [
       {
-        title: 'Book Tittle',
+        title: 'Video Tittle',
         dataIndex: 'title',
       },
       {
@@ -123,19 +112,19 @@ export default class List extends Component {
         render: (text, record) => {
           return (
             <span>
-              <Tooltip title="`View Book">
+              <Tooltip title="`View Video">
                 <Link onClick={() => this.setShowModalVisible (record)}>
                   <EyeOutlined />
                 </Link>
               </Tooltip>
               <Divider type="vertical" />
-              <Tooltip title="Edit Book">
+              <Tooltip title="Edit Video">
                 <Link onClick={() => this.setEditModalVisible (record)}>
                   <EditOutlined />
                 </Link>
               </Tooltip>
               <Divider type="vertical" />
-              <Tooltip title="Delete Book">
+              <Tooltip title="Delete Video">
                 <Link onClick={() => this.showConfirm (record)}>
                   <DeleteOutlined />
                 </Link>
@@ -145,13 +134,13 @@ export default class List extends Component {
         },
       },
     ];
-    const {books} = this.state;
+    const {videos} = this.state;
 
     return (
       <div>
         <Table
           columns={columns}
-          dataSource={books}
+          dataSource={videos}
           rowKey={column => column.id}
           bordered
         />
@@ -161,7 +150,7 @@ export default class List extends Component {
             editVisible={this.state.editVisible}
             onCancel={this.handleCancel}
             onEdit={this.handleEdit}
-            book={this.state.book}
+            video={this.state.video}
             editButton={this.state.editButton}
           />}
 
@@ -169,7 +158,7 @@ export default class List extends Component {
           <Show
             showVisible={this.state.showVisible}
             onCancel={this.handleCancel}
-            book={this.state.book}
+            video={this.state.video}
           />}
       </div>
     );

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Row, Col, Divider, Alert, Modal } from "antd";
 
-const Show = (showVisible, onCancel, article) => {
+const Show = ({showVisible, onCancel, article}) => {
   return (
 <Modal
         title=""

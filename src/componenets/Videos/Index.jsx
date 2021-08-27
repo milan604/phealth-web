@@ -5,6 +5,7 @@ import Table from "./List";
 import Layout from "../Layout/Custom_Layout/Layout";
 import Create from "./Create";
 import { success, error } from "../../helpers/Notification";
+import { videoActions } from "../../actions/VideoActions";
 
 export default class Index extends Component {
 	constructor() {
@@ -21,38 +22,27 @@ export default class Index extends Component {
     this.setState({ visible: true });
   }
 
-  // componentDidMount() {
-  //   if(isAdmin()){
-  //     vehicleTypeActions.fetchVehicleTypes().then(response => {
-  //       this.setState({ types: response.data, isLoading: false });
-  //     });
-  //   }else{
-  //     this.props.history.push("unauthorized")
-  //   }
-  // }
+  componentDidMount() {
+    videoActions.fetchVideos().then((response) => {
+      this.setState({ videos: response.data, isLoading: false });
+    });
+  }
 
-  handleCreate = values => {
-    console.log ('Success:', values);
-    // e.preventDefault();
-    // const { form } = this.formRef.props;
-    // form.validateFields((err, values) => {
-    //   if (!err) {
-    //     this.setState({ createButton: true });
-    //     vehicleTypeActions.createVehicleType(values).then(response => {
-    //       if (response.status === 200) {
-    //         vehicleTypeActions.fetchVehicleTypes().then(response => {
-    //           this.setState({ types: response.data, visible: false });
-    //         });
-    //         success("Vehicle type has been sucessfully created.");
-    //       } else {
-    //         error(
-    //           response.data.error || "Something went wrong. Please try again."
-    //         );
-    //       }
-    //       this.setState({ createButton: false });
-    //     });
-    //   }
-    // });
+  handleCreate = (values) => {
+    this.setState({ createButton: true });
+    videoActions.createVideo(values).then((response) => {
+      if (response.status === 200) {
+        videoActions.fetchVideos().then((response) => {
+          this.setState({ videos: response.data, visible: false });
+        });
+        success("New Video has been sucessfully created.");
+      } else {
+        error(
+          response.data.error || "Something went wrong. Please try again."
+        );
+      }
+      this.setState({ createButton: false });
+    });
   };
 
   handleCancel = () => {
@@ -60,11 +50,11 @@ export default class Index extends Component {
   };
 
   showTable = () => {
-    const { types, isLoading } = this.state;
+    const { videos, isLoading } = this.state;
     if (isLoading) {
       return <LoadSpinner />;
     } else {
-      return <Table table_data={types} />;
+      return <Table table_data={videos} />;
     }
   }
 
@@ -103,7 +93,6 @@ export default class Index extends Component {
             )}
           </div>
       </Layout>
-		)
+		);
 	}
 }
-

@@ -1,14 +1,14 @@
 import customHttp from "../helpers/CustomHttp";
 
-export const bookActions = {
-  fetchBooks,
-  createBook,
-  showBook,
-  updateBook,
-  deleteBook,
+export const articleActions = {
+  fetchArticles,
+  createArticle,
+  showArticle,
+  updateArticle,
+  deleteArticle,
 };
 
-function fetchBooks() {
+function fetchArticles() {
   const requestOptions = {
     method: "GET",
     headers: {
@@ -16,21 +16,21 @@ function fetchBooks() {
       "Content-Type": "application/json",
 
     },
-    url: `/phapp/books`,
+    url: `/phapp/articles`,
   };
   return customHttp(requestOptions).then((response) => {
     return response;
   });
 }
 
-function createBook(values) {
+function createArticle(values) {
   const requestOptions = {
     method: "POST",
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json", // TODO: verify from request headers
     },
-    url: `phapp/book`,
+    url: `phapp/article`,
     data: values,
   };
   return customHttp(requestOptions).then((response) => {
@@ -38,28 +38,28 @@ function createBook(values) {
   });
 }
 
-function showBook(id) {
+function showArticle(id) {
   const requestOptions = {
     method: "GET",
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json", // TODO: verify from request headers
     },
-    url: `phapp/books`,
+    url: `phapp/articles`,
   };
   return customHttp(requestOptions).then((response) => {
     return response;
   });
 }
 
-function updateBook(values, id) {
+function updateArticle(values, id) {
   const requestOptions = {
     method: "PUT",
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json", // TODO: verify from request headers
     },
-    url: `phapp/book/${id}`,
+    url: `phapp/article/${id}`,
     data: values,
   };
   return customHttp(requestOptions).then((response) => {
@@ -67,14 +67,14 @@ function updateBook(values, id) {
   });
 }
 
-function deleteBook(id) {
+function deleteArticle(id) {
   const requestOptions = {
     method: "DELETE",
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json", // TODO: verify from request headers
     },
-    url: `phapp/book/${id}`,
+    url: `phapp/article/${id}`,
   };
   return customHttp(requestOptions).then((response) => {
     return response;

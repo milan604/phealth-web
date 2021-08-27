@@ -10,6 +10,8 @@ import Video from '../Videos/Index';
 import Slide from '../Slides/Index';
 import Article from '../Articles/Index';
 import Material from '../Materials/Index';
+import Vacancy from '../Vacancy/Index';
+import Scholarship from '../Scholarship/Index';
 
 class App extends Component {
   render () {
@@ -22,8 +24,8 @@ class App extends Component {
           <Route exact path="/slides" component={Slide} />
           <Route exact path="/articles" component={Article} />
           <Route exact path="/materials" component={Material} />
-          
-
+          <Route exact path="/vacancies" component={Vacancy} />
+          <Route exact path="/scholarships" component={Scholarship} />
 
           {/* <PrivateRoute exact path="/" component={Home} /> */}
         </Switch>

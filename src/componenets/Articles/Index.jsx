@@ -5,12 +5,12 @@ import Table from "./List";
 import Layout from "../Layout/Custom_Layout/Layout";
 import Create from "./Create";
 import { success, error } from "../../helpers/Notification";
-
+import { articleActions } from "../../actions/ArticleActions";
 export default class Index extends Component {
 	constructor() {
     super();
     this.state = {
-      types: [],
+      articles: [],
       isLoading: true,
       visible: false,
       createButton: false
@@ -21,38 +21,28 @@ export default class Index extends Component {
     this.setState({ visible: true });
   }
 
-  // componentDidMount() {
-  //   if(isAdmin()){
-  //     vehicleTypeActions.fetchVehicleTypes().then(response => {
-  //       this.setState({ types: response.data, isLoading: false });
-  //     });
-  //   }else{
-  //     this.props.history.push("unauthorized")
-  //   }
-  // }
+  componentDidMount() {
+    articleActions.fetchArticles().then((response) => {
+      this.setState({ articles: response.data, isLoading: false });
+    });
+  }
 
-  handleCreate = values => {
-    console.log ('Success:', values);
-    // e.preventDefault();
-    // const { form } = this.formRef.props;
-    // form.validateFields((err, values) => {
-    //   if (!err) {
-    //     this.setState({ createButton: true });
-    //     vehicleTypeActions.createVehicleType(values).then(response => {
-    //       if (response.status === 200) {
-    //         vehicleTypeActions.fetchVehicleTypes().then(response => {
-    //           this.setState({ types: response.data, visible: false });
-    //         });
-    //         success("Vehicle type has been sucessfully created.");
-    //       } else {
-    //         error(
-    //           response.data.error || "Something went wrong. Please try again."
-    //         );
-    //       }
-    //       this.setState({ createButton: false });
-    //     });
-    //   }
-    // });
+  handleCreate = (values) => {
+    console.log("Success:", values);
+    this.setState({ createButton: true });
+    articleActions.createArticle(values).then((response) => {
+      if (response.status === 200) {
+        articleActions.fetchArticles().then((response) => {
+          this.setState({ articles: response.data, visible: false });
+        });
+        success("New Article has been sucessfully created.");
+      } else {
+        error(
+          response.data.error || "Something went wrong. Please try again."
+        );
+      }
+      this.setState({ createButton: false });
+    });
   };
 
   handleCancel = () => {
@@ -60,11 +50,11 @@ export default class Index extends Component {
   };
 
   showTable = () => {
-    const { types, isLoading } = this.state;
+    const { articles, isLoading } = this.state;
     if (isLoading) {
       return <LoadSpinner />;
     } else {
-      return <Table table_data={types} />;
+      return <Table table_data={articles} />;
     }
   }
 

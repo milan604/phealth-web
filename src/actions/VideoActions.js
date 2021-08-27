@@ -1,14 +1,14 @@
 import customHttp from "../helpers/CustomHttp";
 
-export const bookActions = {
-  fetchBooks,
-  createBook,
-  showBook,
-  updateBook,
-  deleteBook,
+export const videoActions = {
+  fetchVideos,
+  createVideo,
+  showVideo,
+  updateVideo,
+  deleteVideo,
 };
 
-function fetchBooks() {
+function fetchVideos() {
   const requestOptions = {
     method: "GET",
     headers: {
@@ -16,21 +16,21 @@ function fetchBooks() {
       "Content-Type": "application/json",
 
     },
-    url: `/phapp/books`,
+    url: `/phapp/videos`,
   };
   return customHttp(requestOptions).then((response) => {
     return response;
   });
 }
 
-function createBook(values) {
+function createVideo(values) {
   const requestOptions = {
     method: "POST",
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json", // TODO: verify from request headers
     },
-    url: `phapp/book`,
+    url: `phapp/video`,
     data: values,
   };
   return customHttp(requestOptions).then((response) => {
@@ -38,28 +38,28 @@ function createBook(values) {
   });
 }
 
-function showBook(id) {
+function showVideo(id) {
   const requestOptions = {
     method: "GET",
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json", // TODO: verify from request headers
     },
-    url: `phapp/books`,
+    url: `phapp/videos`,
   };
   return customHttp(requestOptions).then((response) => {
     return response;
   });
 }
 
-function updateBook(values, id) {
+function updateVideo(values, id) {
   const requestOptions = {
     method: "PUT",
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json", // TODO: verify from request headers
     },
-    url: `phapp/book/${id}`,
+    url: `phapp/video/${id}`,
     data: values,
   };
   return customHttp(requestOptions).then((response) => {
@@ -67,14 +67,14 @@ function updateBook(values, id) {
   });
 }
 
-function deleteBook(id) {
+function deleteVideo(id) {
   const requestOptions = {
     method: "DELETE",
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json", // TODO: verify from request headers
     },
-    url: `phapp/book/${id}`,
+    url: `phapp/video/${id}`,
   };
   return customHttp(requestOptions).then((response) => {
     return response;

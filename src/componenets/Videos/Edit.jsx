@@ -12,8 +12,9 @@ import {
   Upload,
 } from 'antd';
 import {QuestionCircleOutlined, UploadOutlined} from '@ant-design/icons';
+const { TextArea } = Input;
 
-const Edit = (editVisible, onCancel, onEdit, editButton, video) => {
+const Edit = ({editVisible, onCancel, onEdit, editButton, video}) => {
   Form.useForm ();
 
   const onFinishFailed = errorInfo => {
@@ -87,7 +88,7 @@ const Edit = (editVisible, onCancel, onEdit, editButton, video) => {
                   },
                 ]}
               >
-                <Input />
+                <TextArea />
               </Form.Item>
             </Col>
           </Row>

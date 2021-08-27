@@ -5,13 +5,13 @@ import Table from "./List";
 import Layout from "../Layout/Custom_Layout/Layout";
 import Create from "./Create";
 import { success, error } from "../../helpers/Notification";
-import { bookActions } from "../../actions/BookActions";
+import { scholarshipActions } from "../../actions/ScholarshipActions";
 
 export default class Index extends Component {
   constructor() {
     super();
     this.state = {
-      books: [],
+      scholarships: [],
       isLoading: true,
       visible: false,
       createButton: false,
@@ -23,20 +23,23 @@ export default class Index extends Component {
   };
 
   componentDidMount() {
-    bookActions.fetchBooks().then((response) => {
-      this.setState({ books: response.data, isLoading: false });
+    scholarshipActions.fetchScholarships().then((response) => {
+      this.setState({ scholarships: response.data, isLoading: false });
     });
   }
 
   handleCreate = (values) => {
-    console.log("Success:", values);
+    var startDateM = values.date[0] 
+    var endDateM = values.date[1] 
+    values.startDate = startDateM.format('YYYY-MM-DD')
+    values.endDate = endDateM.format('YYYY-MM-DD')
     this.setState({ createButton: true });
-    bookActions.createBook(values).then((response) => {
+    scholarshipActions.createScholarship(values).then((response) => {
       if (response.status === 200) {
-        bookActions.fetchBooks().then((response) => {
-          this.setState({ books: response.data, visible: false });
+        scholarshipActions.fetchScholarships().then((response) => {
+          this.setState({ scholarships: response.data, visible: false });
         });
-        success("New Book has been sucessfully created.");
+        success("New Scholarship has been sucessfully created.");
       } else {
         error(
           response.data.error || "Something went wrong. Please try again."
@@ -51,21 +54,21 @@ export default class Index extends Component {
   };
 
   showTable = () => {
-    const { books, isLoading } = this.state;
+    const { scholarships, isLoading } = this.state;
     if (isLoading) {
       return <LoadSpinner />;
     } else {
-      return <Table table_data={books} />;
+      return <Table table_data={scholarships} />;
     }
   };
 
   render() {
     return (
-      <Layout sidebarSelectedKey="book">
+      <Layout sidebarSelectedKey="scholarship">
         <div>
           <Row style={{ padding: "1em 0 1em 0" }}>
             <Col offset={3} span={15}>
-              <h5>Books Information</h5>
+              <h5>Scholarship Information</h5>
             </Col>
             <Col span={3}>
               <Button

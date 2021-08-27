@@ -8,7 +8,9 @@ import {
   BookOutlined,
   PicLeftOutlined,
   AlignLeftOutlined,
-  DropboxOutlined
+  DropboxOutlined,
+  AuditOutlined,
+  TrophyOutlined
 } from '@ant-design/icons';
 import '../css/layout.css';
 
@@ -23,6 +25,16 @@ export default class Sidebar extends Component {
           <Menu.Item key="home" icon={<UserOutlined />}>
             <Link to="/" style={{textDecoration: 'none'}}>
               <span>Home</span>
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="vacancy" icon={<AuditOutlined />}>
+            <Link to="/vacancies" style={{textDecoration: 'none'}}>
+              <span>Vacancy</span>
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="scholarship" icon={<TrophyOutlined />}>
+            <Link to="/scholarships" style={{textDecoration: 'none'}}>
+              <span>Scholarship</span>
             </Link>
           </Menu.Item>
           <Menu.Item key="book" icon={<BookOutlined />}>

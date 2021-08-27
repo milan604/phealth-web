@@ -13,7 +13,9 @@ import {
 } from 'antd';
 import {QuestionCircleOutlined, UploadOutlined} from '@ant-design/icons';
 
-const Edit = (editVisible, onCancel, onEdit, editButton, book) => {
+const { TextArea } = Input;
+
+const Edit = ({editVisible, onCancel, onEdit, editButton, book}) => {
   Form.useForm ();
 
   const onFinishFailed = errorInfo => {
@@ -43,7 +45,7 @@ const Edit = (editVisible, onCancel, onEdit, editButton, book) => {
         <Form
           name="basic"
           layout={'vertical'}
-          initialValues={{title: book.title, description: book.description}}
+          initialValues={{title: book.title, description: book.description, imagePath: book.imagePath}}
           onFinish={onEdit}
           onFinishFailed={onFinishFailed}
         >
@@ -87,32 +89,27 @@ const Edit = (editVisible, onCancel, onEdit, editButton, book) => {
                   },
                 ]}
               >
-                <Input />
+                <TextArea />
               </Form.Item>
 
               <Form.Item
-                name="upload"
                 label={
                   <span>
-                    File&nbsp;
-                    <Tooltip title="Upload Book File">
+                    Image Path/link&nbsp;
+                    <Tooltip title="Image Path">
                       <QuestionCircleOutlined />
                     </Tooltip>
                   </span>
                 }
-                valuePropName="fileList"
-                // getValueFromEvent={normFile}
+                name="imagePath"
                 rules={[
                   {
-                    required: true,
-                    message: 'Please enter a Book Title!',
-                    whitespace: true,
+                    required: false,
+                    message: 'Please enter a image path/link',
                   },
                 ]}
               >
-                <Upload name="logo" action="/upload.do" listType="picture">
-                  <Button icon={<UploadOutlined />}>Click to upload</Button>
-                </Upload>
+                <Input />
               </Form.Item>
             </Col>
           </Row>

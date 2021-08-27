@@ -6,6 +6,7 @@ import Edit from './Edit';
 import {Link} from 'react-router-dom';
 import {EyeOutlined, EditOutlined, DeleteOutlined} from '@ant-design/icons';
 import {success, error} from '../../helpers/Notification';
+import { articleActions } from "../../actions/ArticleActions";
 
 const {confirm} = Modal;
 
@@ -35,31 +36,31 @@ export default class List extends Component {
     this.setState ({editVisible: false, showVisible: false});
   };
 
-  // deleteArticle = articleId => {
-  //   articleActions.deleteArticle (articleId).then (response => {
-  //     if (response.status === 204) {
-  //       articleActions.fetchArticles ().then (response => {
-  //         this.setState ({articles: response.data});
-  //         success ('Article has been sucessfully deleted.');
-  //       });
-  //     } else {
-  //       error (
-  //         response.data.error || 'Something went wrong. Please try again.'
-  //       );
-  //     }
-  //   });
-  // };
+  deleteArticle = articleId => {
+    articleActions.deleteArticle (articleId).then (response => {
+      if (response.status === 200) {
+        articleActions.fetchArticles ().then (response => {
+          this.setState ({articles: response.data});
+          success ('Article has been sucessfully deleted.');
+        });
+      } else {
+        error (
+          response.data.error || 'Something went wrong. Please try again.'
+        );
+      }
+    });
+  };
 
-  // showConfirm = article => {
-  //   confirm ({
-  //     title: 'Do you Want to delete this article ?',
-  //     content: `Article title =>  ${article.title}`,
-  //     onOk: () => this.deleteArticle (article.id),
-  //     onCancel () {
-  //       console.log ('Cancel');
-  //     },
-  //   });
-  // };
+  showConfirm = article => {
+    confirm ({
+      title: 'Do you Want to delete this article ?',
+      content: `Article title =>  ${article.title}`,
+      onOk: () => this.deleteArticle (article.id),
+      onCancel () {
+        console.log ('Cancel');
+      },
+    });
+  };
 
   formatValues = values => {
     Object.entries (values).forEach (([key, value]) => {
@@ -70,35 +71,24 @@ export default class List extends Component {
     return values;
   };
 
-  handleEdit = e => {
-    // e.preventDefault ();
-    // const {form} = this.formRef.props;
-    // form.validateFields ((err, values) => {
-    //   if (!err) {
-    //     this.setState ({editButton: true});
-    //     articleActions
-    //       .updateArticle (
-    //         this.formatValues (values),
-    //         this.state.article.id
-    //       )
-    //       .then (response => {
-    //         if (response.status === 200) {
-    //           articleActions.fetchArticles ().then (response => {
-    //             this.setState ({
-    //               articles: response.data,
-    //               editVisible: false,
-    //             });
-    //           });
-    //           success ('Article has been sucessfully updated.');
-    //         } else {
-    //           error (
-    //             response.data.error || 'Something went wrong. Please try again.'
-    //           );
-    //         }
-    //         this.setState ({editButton: false});
-    //       });
-    //   }
-    // });
+  handleEdit = (values) => {
+    this.setState({ editButton: true });
+        articleActions.updateArticle(values, this.state.article.id).then((response) => {
+          if (response.status === 200) {
+            articleActions.fetchArticles().then((response) => {
+              this.setState({
+                articles: response.data,
+                editVisible: false,
+              });
+            });
+            success("Article has been sucessfully updated.");
+          } else {
+            error(
+              response.data.error || "Something went wrong. Please try again."
+            );
+          }
+          this.setState({ editButton: false });
+        });
   };
 
   componentDidUpdate (prevProps) {

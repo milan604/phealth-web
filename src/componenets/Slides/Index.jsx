@@ -5,12 +5,13 @@ import Table from "./List";
 import Layout from "../Layout/Custom_Layout/Layout";
 import Create from "./Create";
 import { success, error } from "../../helpers/Notification";
+import { slideActions } from "../../actions/SlideActions";
 
 export default class Index extends Component {
 	constructor() {
     super();
     this.state = {
-      types: [],
+      slides: [],
       isLoading: true,
       visible: false,
       createButton: false
@@ -21,50 +22,40 @@ export default class Index extends Component {
     this.setState({ visible: true });
   }
 
-  // componentDidMount() {
-  //   if(isAdmin()){
-  //     vehicleTypeActions.fetchVehicleTypes().then(response => {
-  //       this.setState({ types: response.data, isLoading: false });
-  //     });
-  //   }else{
-  //     this.props.history.push("unauthorized")
-  //   }
-  // }
-
-  handleCreate = values => {
-    console.log ('Success:', values);
-    // e.preventDefault();
-    // const { form } = this.formRef.props;
-    // form.validateFields((err, values) => {
-    //   if (!err) {
-    //     this.setState({ createButton: true });
-    //     vehicleTypeActions.createVehicleType(values).then(response => {
-    //       if (response.status === 200) {
-    //         vehicleTypeActions.fetchVehicleTypes().then(response => {
-    //           this.setState({ types: response.data, visible: false });
-    //         });
-    //         success("Vehicle type has been sucessfully created.");
-    //       } else {
-    //         error(
-    //           response.data.error || "Something went wrong. Please try again."
-    //         );
-    //       }
-    //       this.setState({ createButton: false });
-    //     });
-    //   }
-    // });
+  componentDidMount() {
+    slideActions.fetchSlides().then((response) => {
+      this.setState({ slides: response.data, isLoading: false });
+    });
+  }
+  handleCreate = (values) => {
+    console.log("Success:", values);
+    this.setState({ createButton: true });
+    slideActions.createSlide(values).then((response) => {
+      if (response.status === 200) {
+        slideActions.fetchSlides().then((response) => {
+          this.setState({ slides: response.data, visible: false });
+        });
+        success("New Slide has been sucessfully created.");
+      } else {
+        error(
+          response.data.error || "Something went wrong. Please try again."
+        );
+      }
+      this.setState({ createButton: false });
+    });
   };
+
 
   handleCancel = () => {
     this.setState({ visible: false });
   };
 
   showTable = () => {
-    const { types, isLoading } = this.state;
+    const { slides, isLoading } = this.state;
     if (isLoading) {
       return <LoadSpinner />;
     } else {
-      return <Table table_data={types} />;
+      return <Table table_data={slides} />;
     }
   }
 

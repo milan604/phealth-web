@@ -4,7 +4,7 @@ import { error } from '../helpers/Notification'
 import Cookie from "js.cookie";
 
 let customHttp = axios.create({
-  baseURL: `${baseURL.URL}${baseURL.PORT}`,
+  baseURL: `${baseURL.URL}:${baseURL.PORT}`,
   validateStatus: function (status) {
     if (status === 401) {
       Cookie.remove('accesstoken', { path: '/' })
@@ -13,11 +13,11 @@ let customHttp = axios.create({
       Cookie.remove('role', { path: '/' })
       Cookie.remove('name', { path: '/' })
       Cookie.remove('uid', { path: '/' })
-      if (window.location.href.match(/\/login/)){
-          error('Invalid Credentials. Please try again.')
-      }else{
-          window.location.href = '/login'
-      }
+      // if (window.location.href.match(/\/login/)){
+      //     error('Invalid Credentials. Please try again.')
+      // }else{
+      //     window.location.href = '/login'
+      // }
     }
     return status // default
   }

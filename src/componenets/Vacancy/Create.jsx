@@ -9,10 +9,12 @@ import {
   Col,
   Alert,
   Divider,
+  DatePicker,
   Upload,
 } from 'antd';
 import {QuestionCircleOutlined, UploadOutlined} from '@ant-design/icons';
 const { TextArea } = Input;
+const { RangePicker } = DatePicker;
 
 const Create = ({visible, onCancel, onCreate, createButton}) => {
   Form.useForm ();
@@ -36,7 +38,7 @@ const Create = ({visible, onCancel, onCreate, createButton}) => {
             style={{background: 'rgb(217, 217, 217)', height: 35}}
           >
             <b>
-              <Alert message="Add New Book" type="default" />
+              <Alert message="Add New Vacancy" type="default" />
             </b>
           </Col>
         </Row>
@@ -53,7 +55,7 @@ const Create = ({visible, onCancel, onCreate, createButton}) => {
                 label={
                   <span>
                     Title&nbsp;
-                    <Tooltip title="Book Title">
+                    <Tooltip title="Vacancy Title">
                       <QuestionCircleOutlined />
                     </Tooltip>
                   </span>
@@ -62,7 +64,7 @@ const Create = ({visible, onCancel, onCreate, createButton}) => {
                 rules={[
                   {
                     required: true,
-                    message: 'Please enter a Book Title!',
+                    message: 'Please enter a Vacancy Title!',
                   },
                 ]}
               >
@@ -73,7 +75,7 @@ const Create = ({visible, onCancel, onCreate, createButton}) => {
                 label={
                   <span>
                     Description&nbsp;
-                    <Tooltip title="Book Description">
+                    <Tooltip title="Vacancy Description">
                       <QuestionCircleOutlined />
                     </Tooltip>
                   </span>
@@ -82,28 +84,105 @@ const Create = ({visible, onCancel, onCreate, createButton}) => {
                 rules={[
                   {
                     required: true,
-                    message: 'Please enter a Book Description!',
+                    message: 'Please enter a Vacancy Description!',
                     whitespace: true,
                   },
                 ]}
               >
                 <TextArea />
+
               </Form.Item>
 
               <Form.Item
                 label={
                   <span>
-                    Image Path/link&nbsp;
-                    <Tooltip title="Image Path">
+                    Vacancy Post&nbsp;
+                    <Tooltip title="Post">
                       <QuestionCircleOutlined />
                     </Tooltip>
                   </span>
                 }
-                name="imagePath"
+                name="post"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please enter a Vacancy Post!',
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                label={
+                  <span>
+                    Location&nbsp;
+                    <Tooltip title="Location">
+                      <QuestionCircleOutlined />
+                    </Tooltip>
+                  </span>
+                }
+                name="location"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please enter a Location!',
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                label={
+                  <span>
+                    Issuer Organization&nbsp;
+                    <Tooltip title="Issuer Organization">
+                      <QuestionCircleOutlined />
+                    </Tooltip>
+                  </span>
+                }
+                name="issuer"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please enter a Issuer Organization!',
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                label={
+                  <span>
+                    Vacancy Date&nbsp;
+                    <Tooltip title="Vacancy Date">
+                      <QuestionCircleOutlined />
+                    </Tooltip>
+                  </span>
+                }
+                name="date"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please enter a Vacancy Date Range!',
+                  },
+                ]}
+              >
+                <RangePicker />
+              </Form.Item>
+              <Form.Item
+                label={
+                  <span>
+                    Site Link&nbsp;
+                    <Tooltip title="Site Link">
+                      <QuestionCircleOutlined />
+                    </Tooltip>
+                  </span>
+                }
+                name="link"
                 rules={[
                   {
                     required: false,
-                    message: 'Please enter a image path/link',
+                    message: 'Please enter a vacancy site link',
                   },
                 ]}
               >

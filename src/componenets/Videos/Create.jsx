@@ -12,6 +12,7 @@ import {
   Upload,
 } from 'antd';
 import {QuestionCircleOutlined, UploadOutlined} from '@ant-design/icons';
+const { TextArea } = Input;
 
 const Create = ({visible, onCancel, onCreate, createButton}) => {
   Form.useForm ();
@@ -86,7 +87,7 @@ const Create = ({visible, onCancel, onCreate, createButton}) => {
                   },
                 ]}
               >
-                <Input />
+                <TextArea />
               </Form.Item>
             </Col>
           </Row>

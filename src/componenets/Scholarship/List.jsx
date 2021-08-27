@@ -5,7 +5,7 @@ import Edit from "./Edit";
 import { Link } from "react-router-dom";
 import { EyeOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { success, error } from "../../helpers/Notification";
-import { bookActions } from "../../actions/BookActions";
+import { scholarshipActions } from "../../actions/ScholarshipActions";
 
 const { confirm } = Modal;
 
@@ -13,34 +13,34 @@ export default class List extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      books: props.table_data,
+      scholarships: props.table_data,
       editVisible: false,
       showVisible: false,
       editButton: false,
-      book: {},
+      scholarship: {},
     };
   }
 
-  setShowModalVisible = (book) => {
+  setShowModalVisible = (scholarship) => {
     this.setState({ showVisible: true });
-    this.setState({ book });
+    this.setState({ scholarship });
   };
 
-  setEditModalVisible = (book) => {
+  setEditModalVisible = (scholarship) => {
     this.setState({ editVisible: true });
-    this.setState({ book });
+    this.setState({ scholarship });
   };
 
   handleCancel = () => {
     this.setState({ editVisible: false, showVisible: false });
   };
 
-  deleteBook = (bookId) => {
-    bookActions.deleteBook(bookId).then((response) => {
+  deleteScholarship = (scholarshipId) => {
+    scholarshipActions.deleteScholarship(scholarshipId).then((response) => {
       if (response.status === 200) {
-        bookActions.fetchBooks().then((response) => {
-          this.setState({ books: response.data });
-          success("Book has been sucessfully deleted.");
+        scholarshipActions.fetchScholarships().then((response) => {
+          this.setState({ scholarships: response.data });
+          success("Scholarship has been sucessfully deleted.");
         });
       } else {
         error(response.data.error || "Something went wrong. Please try again.");
@@ -48,11 +48,11 @@ export default class List extends Component {
     });
   };
 
-  showConfirm = (book) => {
+  showConfirm = (scholarship) => {
     confirm({
-      title: "Do you Want to delete this book ?",
-      content: `Book title =>  ${book.title}`,
-      onOk: () => this.deleteBook(book.id),
+      title: "Do you Want to delete this scholarship ?",
+      content: `Scholarship title =>  ${scholarship.title}`,
+      onOk: () => this.deleteScholarship(scholarship.id),
       onCancel() {
         console.log("Cancel");
       },
@@ -70,15 +70,15 @@ export default class List extends Component {
 
   handleEdit = (values) => {
     this.setState({ editButton: true });
-        bookActions.updateBook(values, this.state.book.id).then((response) => {
+        scholarshipActions.updateScholarship(values, this.state.scholarship.id).then((response) => {
           if (response.status === 200) {
-            bookActions.fetchBooks().then((response) => {
+            scholarshipActions.fetchScholarships().then((response) => {
               this.setState({
-                books: response.data,
+                scholarships: response.data,
                 editVisible: false,
               });
             });
-            success("Book has been sucessfully updated.");
+            success("Scholarship has been sucessfully updated.");
           } else {
             error(
               response.data.error || "Something went wrong. Please try again."
@@ -90,19 +90,27 @@ export default class List extends Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.table_data !== prevProps.table_data) {
-      this.setState({ books: this.props.table_data });
+      this.setState({ scholarships: this.props.table_data });
     }
   }
 
   render() {
     const columns = [
       {
-        title: "Book Tittle",
+        title: "Scholarship Title",
         dataIndex: "title",
       },
       {
-        title: "Description",
-        dataIndex: "description",
+        title: "Post",
+        dataIndex: "post",
+      },
+      {
+        title: "Location",
+        dataIndex: "location",
+      },
+      {
+        title: "Deadline",
+        dataIndex: "endDate",
       },
       {
         title: "Action",
@@ -110,19 +118,19 @@ export default class List extends Component {
         render: (text, record) => {
           return (
             <span>
-              <Tooltip title="`View Book">
+              <Tooltip title="`View Scholarship">
                 <Link onClick={() => this.setShowModalVisible(record)}>
                   <EyeOutlined />
                 </Link>
               </Tooltip>
               <Divider type="vertical" />
-              <Tooltip title="Edit Book">
+              <Tooltip title="Edit Scholarship">
                 <Link onClick={() => this.setEditModalVisible(record)}>
                   <EditOutlined />
                 </Link>
               </Tooltip>
               <Divider type="vertical" />
-              <Tooltip title="Delete Book">
+              <Tooltip title="Delete Scholarship">
                 <Link onClick={() => this.showConfirm(record)}>
                   <DeleteOutlined />
                 </Link>
@@ -132,13 +140,13 @@ export default class List extends Component {
         },
       },
     ];
-    const { books } = this.state;
+    const { scholarships } = this.state;
 
     return (
       <div>
         <Table
           columns={columns}
-          dataSource={books}
+          dataSource={scholarships}
           rowKey={(column) => column.id}
           bordered
         />
@@ -148,7 +156,7 @@ export default class List extends Component {
             editVisible={this.state.editVisible}
             onCancel={this.handleCancel}
             onEdit={this.handleEdit}
-            book={this.state.book}
+            scholarship={this.state.scholarship}
             editButton={this.state.editButton}
           />
         )}
@@ -157,7 +165,7 @@ export default class List extends Component {
           <Show
             showVisible={this.state.showVisible}
             onCancel={this.handleCancel}
-            book={this.state.book}
+            scholarship={this.state.scholarship}
           />
         )}
       </div>

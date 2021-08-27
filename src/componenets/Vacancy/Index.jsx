@@ -5,13 +5,13 @@ import Table from "./List";
 import Layout from "../Layout/Custom_Layout/Layout";
 import Create from "./Create";
 import { success, error } from "../../helpers/Notification";
-import { bookActions } from "../../actions/BookActions";
+import { vacancyActions } from "../../actions/VacancyActions";
 
 export default class Index extends Component {
   constructor() {
     super();
     this.state = {
-      books: [],
+      vacancies: [],
       isLoading: true,
       visible: false,
       createButton: false,
@@ -23,20 +23,25 @@ export default class Index extends Component {
   };
 
   componentDidMount() {
-    bookActions.fetchBooks().then((response) => {
-      this.setState({ books: response.data, isLoading: false });
+    vacancyActions.fetchVacancies().then((response) => {
+      this.setState({ vacancies: response.data, isLoading: false });
     });
   }
 
   handleCreate = (values) => {
-    console.log("Success:", values);
+    
+    var startDateM = values.date[0] 
+    var endDateM = values.date[1] 
+    values.startDate = startDateM.format('YYYY-MM-DD')
+    values.endDate = endDateM.format('YYYY-MM-DD')
+
     this.setState({ createButton: true });
-    bookActions.createBook(values).then((response) => {
+    vacancyActions.createVacancy(values).then((response) => {
       if (response.status === 200) {
-        bookActions.fetchBooks().then((response) => {
-          this.setState({ books: response.data, visible: false });
+        vacancyActions.fetchVacancies().then((response) => {
+          this.setState({ vacancies: response.data, visible: false });
         });
-        success("New Book has been sucessfully created.");
+        success("New Vacancy has been sucessfully created.");
       } else {
         error(
           response.data.error || "Something went wrong. Please try again."
@@ -51,21 +56,21 @@ export default class Index extends Component {
   };
 
   showTable = () => {
-    const { books, isLoading } = this.state;
+    const { vacancies, isLoading } = this.state;
     if (isLoading) {
       return <LoadSpinner />;
     } else {
-      return <Table table_data={books} />;
+      return <Table table_data={vacancies} />;
     }
   };
 
   render() {
     return (
-      <Layout sidebarSelectedKey="book">
+      <Layout sidebarSelectedKey="vacancy">
         <div>
           <Row style={{ padding: "1em 0 1em 0" }}>
             <Col offset={3} span={15}>
-              <h5>Books Information</h5>
+              <h5>Job Vacancy Information</h5>
             </Col>
             <Col span={3}>
               <Button

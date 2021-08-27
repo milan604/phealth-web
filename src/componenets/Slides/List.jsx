@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-// import {slideActions} from '../../actions/slideActions';
+import {slideActions} from '../../actions/SlideActions';
 import {Table, Divider, Modal, Tooltip} from 'antd';
 import Show from './Show';
 import Edit from './Edit';
@@ -35,31 +35,31 @@ export default class List extends Component {
     this.setState ({editVisible: false, showVisible: false});
   };
 
-  // deleteSlide = slideId => {
-  //   slideActions.deleteSlide (slideId).then (response => {
-  //     if (response.status === 204) {
-  //       slideActions.fetchSlides ().then (response => {
-  //         this.setState ({slides: response.data});
-  //         success ('Slide has been sucessfully deleted.');
-  //       });
-  //     } else {
-  //       error (
-  //         response.data.error || 'Something went wrong. Please try again.'
-  //       );
-  //     }
-  //   });
-  // };
+  deleteSlide = slideId => {
+    slideActions.deleteSlide (slideId).then (response => {
+      if (response.status === 200) {
+        slideActions.fetchSlides ().then (response => {
+          this.setState ({slides: response.data});
+          success ('Slide has been sucessfully deleted.');
+        });
+      } else {
+        error (
+          response.data.error || 'Something went wrong. Please try again.'
+        );
+      }
+    });
+  };
 
-  // showConfirm = slide => {
-  //   confirm ({
-  //     title: 'Do you Want to delete this slide ?',
-  //     content: `Slide title =>  ${slide.title}`,
-  //     onOk: () => this.deleteSlide (slide.id),
-  //     onCancel () {
-  //       console.log ('Cancel');
-  //     },
-  //   });
-  // };
+  showConfirm = slide => {
+    confirm ({
+      title: 'Do you Want to delete this slide ?',
+      content: `Slide title =>  ${slide.title}`,
+      onOk: () => this.deleteSlide (slide.id),
+      onCancel () {
+        console.log ('Cancel');
+      },
+    });
+  };
 
   formatValues = values => {
     Object.entries (values).forEach (([key, value]) => {
@@ -70,35 +70,24 @@ export default class List extends Component {
     return values;
   };
 
-  handleEdit = e => {
-    // e.preventDefault ();
-    // const {form} = this.formRef.props;
-    // form.validateFields ((err, values) => {
-    //   if (!err) {
-    //     this.setState ({editButton: true});
-    //     slideActions
-    //       .updateSlide (
-    //         this.formatValues (values),
-    //         this.state.slide.id
-    //       )
-    //       .then (response => {
-    //         if (response.status === 200) {
-    //           slideActions.fetchSlides ().then (response => {
-    //             this.setState ({
-    //               slides: response.data,
-    //               editVisible: false,
-    //             });
-    //           });
-    //           success ('Slide has been sucessfully updated.');
-    //         } else {
-    //           error (
-    //             response.data.error || 'Something went wrong. Please try again.'
-    //           );
-    //         }
-    //         this.setState ({editButton: false});
-    //       });
-    //   }
-    // });
+  handleEdit = (values) => {
+    this.setState({ editButton: true });
+        slideActions.updateSlide(values, this.state.slide.id).then((response) => {
+          if (response.status === 200) {
+            slideActions.fetchSlides().then((response) => {
+              this.setState({
+                slides: response.data,
+                editVisible: false,
+              });
+            });
+            success("Slide has been sucessfully updated.");
+          } else {
+            error(
+              response.data.error || "Something went wrong. Please try again."
+            );
+          }
+          this.setState({ editButton: false });
+        });
   };
 
   componentDidUpdate (prevProps) {
