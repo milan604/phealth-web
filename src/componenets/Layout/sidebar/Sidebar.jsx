@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Menu} from 'antd';
 import {Link} from 'react-router-dom';
+import {userActions} from '../../../actions/UserActions';
 import {
   UserOutlined,
   VideoCameraOutlined,
@@ -64,7 +65,7 @@ export default class Sidebar extends Component {
           </Menu.Item>
           <SubMenu key="extra" icon={<WindowsOutlined />} title="Milan">
           <Menu.Item key="profile">Profile</Menu.Item>
-          <Menu.Item key="logout">Logout</Menu.Item>
+          <Menu.Item key="logout" onClick={userActions.logout}>Logout</Menu.Item>
         </SubMenu>
         </Menu>
       </div>

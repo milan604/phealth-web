@@ -1,4 +1,5 @@
 import customHttp from "../helpers/CustomHttp";
+import Cookie from "js.cookie";
 
 export const bookActions = {
   fetchBooks,
@@ -14,7 +15,7 @@ function fetchBooks() {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
-
+      "Authorization": Cookie.get("accesstoken")
     },
     url: `/phapp/books`,
   };
@@ -29,6 +30,7 @@ function createBook(values) {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json", // TODO: verify from request headers
+      "Authorization": Cookie.get("accesstoken")
     },
     url: `phapp/book`,
     data: values,
@@ -44,6 +46,7 @@ function showBook(id) {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json", // TODO: verify from request headers
+      "Authorization": Cookie.get("accesstoken")
     },
     url: `phapp/books`,
   };
@@ -58,6 +61,7 @@ function updateBook(values, id) {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json", // TODO: verify from request headers
+      "Authorization": Cookie.get("accesstoken")
     },
     url: `phapp/book/${id}`,
     data: values,
@@ -73,6 +77,7 @@ function deleteBook(id) {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json", // TODO: verify from request headers
+      "Authorization": Cookie.get("accesstoken")
     },
     url: `phapp/book/${id}`,
   };

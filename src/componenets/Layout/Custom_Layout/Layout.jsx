@@ -59,7 +59,7 @@ export default class CustomLayout extends Component {
             {this.props.children}
           </Content>
           <Footer style={{textAlign: 'center'}}>
-            MSRSN Corporation ©2021 Created by Sahas Dangol
+           M-LAN ©2021 Created by Er. Milan Adhikari
           </Footer>
         </Layout>
       </Layout>

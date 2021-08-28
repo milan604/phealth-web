@@ -24,7 +24,13 @@ export default class Index extends Component {
 
   componentDidMount() {
     slideActions.fetchSlides().then((response) => {
-      this.setState({ slides: response.data, isLoading: false });
+      if(response.status !== 200){
+        error("Something Went Wrong")
+        this.setState({ slides: [], isLoading: false });
+      } else {
+        this.setState({ slides: response.data, isLoading: false });
+      }
+     
     });
   }
   handleCreate = (values) => {

@@ -1,4 +1,5 @@
 import customHttp from "../helpers/CustomHttp";
+import Cookie from "js.cookie";
 
 export const scholarshipActions = {
   fetchScholarships,
@@ -14,6 +15,7 @@ function fetchScholarships() {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
+      "Authorization": Cookie.get("accesstoken")
 
     },
     url: `/phapp/scholarships`,
@@ -28,7 +30,8 @@ function createScholarship(values) {
     method: "POST",
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json", // TODO: verify from request headers
+      "Content-Type": "application/json",
+      "Authorization": Cookie.get("accesstoken") // TODO: verify from request headers
     },
     url: `phapp/scholarship`,
     data: values,
@@ -43,7 +46,8 @@ function showScholarship(id) {
     method: "GET",
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json", // TODO: verify from request headers
+      "Content-Type": "application/json",
+      "Authorization": Cookie.get("accesstoken") // TODO: verify from request headers
     },
     url: `phapp/scholarships`,
   };
@@ -57,7 +61,8 @@ function updateScholarship(values, id) {
     method: "PUT",
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json", // TODO: verify from request headers
+      "Content-Type": "application/json",
+      "Authorization": Cookie.get("accesstoken") // TODO: verify from request headers
     },
     url: `phapp/scholarship/${id}`,
     data: values,
@@ -72,7 +77,8 @@ function deleteScholarship(id) {
     method: "DELETE",
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json", // TODO: verify from request headers
+      "Content-Type": "application/json",
+      "Authorization": Cookie.get("accesstoken") // TODO: verify from request headers
     },
     url: `phapp/scholarship/${id}`,
   };

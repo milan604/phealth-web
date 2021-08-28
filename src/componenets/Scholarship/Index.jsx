@@ -24,7 +24,13 @@ export default class Index extends Component {
 
   componentDidMount() {
     scholarshipActions.fetchScholarships().then((response) => {
-      this.setState({ scholarships: response.data, isLoading: false });
+      if(response.status !== 200){
+        error("Something Went Wrong")
+        this.setState({ scholarships: [], isLoading: false });
+      } else {
+        this.setState({ scholarships: response.data, isLoading: false });
+      }
+      
     });
   }
 

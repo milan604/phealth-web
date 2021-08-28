@@ -24,7 +24,12 @@ export default class Index extends Component {
 
   componentDidMount() {
     videoActions.fetchVideos().then((response) => {
-      this.setState({ videos: response.data, isLoading: false });
+      if(response.status !== 200){
+        error("Something Went Wrong")
+        this.setState({ videos: [], isLoading: false });
+      } else {
+        this.setState({ videos: response.data, isLoading: false });
+      }
     });
   }
 

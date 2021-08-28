@@ -23,7 +23,13 @@ export default class Index extends Component {
 
   componentDidMount() {
     articleActions.fetchArticles().then((response) => {
-      this.setState({ articles: response.data, isLoading: false });
+      if(response.status !== 200){
+        error("Something Went Wrong")
+        this.setState({ articles: [], isLoading: false });
+      } else {
+        this.setState({ articles: response.data, isLoading: false });
+      }
+      
     });
   }
 

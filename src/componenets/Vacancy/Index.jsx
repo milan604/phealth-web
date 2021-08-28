@@ -24,7 +24,13 @@ export default class Index extends Component {
 
   componentDidMount() {
     vacancyActions.fetchVacancies().then((response) => {
-      this.setState({ vacancies: response.data, isLoading: false });
+      if(response.status !== 200){
+        error("Something Went Wrong")
+        this.setState({ vacancies: [], isLoading: false });
+      } else {
+        this.setState({ vacancies: response.data, isLoading: false });
+      }
+      
     });
   }
 

@@ -1,157 +1,153 @@
-import React, { Component } from "react";
-import { Form, Input, Button, Select } from "antd";
-import { userActions } from "../../actions/UserActions";
+import React, { Component } from 'react';
+import '../../index.css';
+import axios from "axios";
+import { Form, Icon, Input, Button, Checkbox, message, Spin, Space } from "antd";
+import loginImg from './login.png';
+import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { db } from "../../firebase";
+import { collection, query, where, getDocs } from "firebase/firestore"; 
+import { sha256 } from 'js-sha256';
 import { success, error } from "../../helpers/Notification";
-import ConfirmPhoneNumber from "../Confirmation/confirmationOtp";
-
-const Option = {Select}
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e) => {
-  document.getElementById('home-button').style.visibility = 'visible'
-  e.preventDefault();
-  deferredPrompt = e;
-});
+import Cookie from 'js.cookie';
+import { userActions } from "../../actions/UserActions";
+import { getByDisplayValue } from '@testing-library/react';
 
 class Login extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
-      phone_no: "",
-      loginStatus: false,
-      visible: false,
-      otpButton: false,
-      loginButton: false
+      users: [],
+      isLoading: false
+    };
+  }
+  isLoggedIn = () => {
+    // window.loggedUsername should be defined by UI page / jelly script
+    // if it's 'guest' that means there is no active user session
+    if (window.loggedUsername==='guest') {
+      return false;
+    } else {
+      return false; // set it to false for local development to prevent passing through
     }
-    this.addToHomeScreen = this.addToHomeScreen.bind(this)
-    this.submitOtpForm = this.submitOtpForm.bind(this)
   }
 
-  handleSubmit = e => {
-    e.preventDefault();
-    this.props.form.validateFields((err, values) => {
-      if (!err) {
-      this.setState({ loginButton: true})
-        userActions.confirmations(values, this.props.history).then(response =>{
-          if(response.status === 200) {
-            success(response.data.success)
-            this.setState({ loginStatus: true, visible: true, phone_no: values.phone_no })
-          }else{
-            error(response.data.error)
-          }
-          this.setState({ loginButton: false})
-        });
-      }
+  handleSubmit = async (values) => {
+    this.setState({
+      isLoading: true
+    })
+    var passWordHash = sha256(values.password);
+    values.password = passWordHash;
+    const usersRef = collection(db, "users");
+    const q = query(usersRef, where("email", "==", values.userName),where("password", "==", passWordHash));
+    const querySnapshot = await getDocs(q);
+    if(querySnapshot.empty){
+      error("Invalid Credentials. Please try with correct credential");
+      this.setState({
+        isLoading: false
+      })
+      return
+    }
+    querySnapshot.forEach((doc) => {
+      var data = doc.data();
+        if(!data.isAdmin){
+          error("Sorry! You don't have permission to login to app");
+          this.setState({
+            isLoading: false
+          })
+          return
+        } else {
+         
+          userActions.fetchToken(values).then((response) => {
+            if (response.status === 401) {
+              Cookie.remove('accesstoken', { path: '/' })
+              Cookie.remove('expiry', { path: '/' })
+              Cookie.remove('role', { path: '/' })
+              Cookie.remove('uid', { path: '/' })
+              if (window.location.href.match(/\/login/)){
+                  error('Invalid Credentials. Please try again.')
+              }else{
+                  window.location.href = '/login'
+              }
+            }
+            Cookie.set("accesstoken", response.data["token"], {
+              expires: 7,
+              path: "/"
+            });
+            Cookie.set("expiry", response.headers["expiry"], {
+              expires: 7,
+              path: "/"
+            });
+            Cookie.set("uid", response.data["user_id"], { expires: 7, path: "/" });
+            success("Logged In Successfully")
+            this.setState({
+              isLoading: false
+            })
+            this.props.history.push("/");
+          });
+        }
+
     });
   };
 
-  submitOtpForm = e => {
-    e.preventDefault();
-    this.formRef.validateFields((err, values) =>{
-      if(!err) {
-      this.setState({ otpButton: true})
-        userActions.login(values, this.props.history).then(response => {
-          if(response.status === 200) {
-            success("Welcome here! To Park");
-          }else{
-            error(response.data.error)
-          }
-        this.setState({otpButton: false})
-        })
-      }
-    })
-  };
-
-  addToHomeScreen=() => {
-    if(deferredPrompt) {
-      deferredPrompt.prompt();
-      deferredPrompt.userChoice
-      .then((choiceResult) => {
-      if (choiceResult.outcome === 'accepted') {
-        document.getElementById('home-button').style.visibility = 'hidden'
-      } else {
-        document.getElementById('home-button').style.visibility = 'visible'
-      }
-      deferredPrompt = null;
-      });
-    }
-  }
-
-  addToHomeScreenButton = () => {
-    return(
-      <Button
-        style = {{visibility: 'hidden'}}
-        id ="home-button"
-        onClick = {this.addToHomeScreen}
-      >
-        Download
-      </Button>
-    )
-  }
-
-  saveFormRef = (formRef) => {
-    this.formRef = formRef;
-  };
-
-  handleCancel() {
-    this.setState({visible: false})
-  }
+  // async componentDidMount() {
+  //   const usersRef = collection(db, "users");
+  //   const q = query(usersRef, where("Email", "==", "test@gmail.com"));
+  //   const querySnapshot = await getDocs(q);
+  //   querySnapshot.forEach((doc) => {
+  //     // doc.data() is never undefined for query doc snapshots
+  //     console.log(doc.id, " => ", doc.data());
+  //   });
+  // }
 
   render() {
-    const { getFieldDecorator } = this.props.form;
-    const prefixSelector = getFieldDecorator('prefix', {
-      initialValue: '+977'
-    })(
-      <Select style={{ width: 80 }}>
-        <Option value="977">+977</Option>
-      </Select>,
-    );
+    if (this.isLoggedIn()) {
+      window.location = window.mainAppPage;
+    }
     return (
-      <article  class="mw6 center bg-white br3 pa4 pa4-ns mv6 ba b--black-10" style={{height: '23rem'}}>
-      {this.addToHomeScreenButton()}
-      <h4 style={{ textAlign: "center" }}>Login</h4>
-      <Form onSubmit={this.handleSubmit} className="login-form">
-        <Form.Item label="Phone Number">
-          {getFieldDecorator('phone_no', {
-            rules: [{ required: true, message: 'Please input your phone number!' }],
-          })(<Input addonBefore={prefixSelector} style={{ width: '100%' }} />)}
-        </Form.Item>
-
-        <Form.Item>
-          {getFieldDecorator("remember", {
-            valuePropName: "checked",
-            initialValue: true
-          })}
-          <Button
-            type="primary"
-            htmlType="submit"
-            className="login-form-button"
-            disabled = {this.state.loginButton}
-            block
-          >
-            Log in
-          </Button>
-        </Form.Item>
-        <Form.Item>
-          Don't you have Account ?{" "}
-          <a href="/register">Register Now!</a>
-        </Form.Item>
-      </Form>
-      {
-        this.state.loginStatus ?
-        <ConfirmPhoneNumber
-          wrappedComponentRef={this.saveFormRef}
-          visible = {this.state.visible}
-          handleCancel = {this.handleCancel.bind(this)}
-          phone_no = {this.state.phone_no}
-          status= "Login"
-          otpButton = {this.state.otpButton}
-          submitOtpForm = {this.submitOtpForm}
-        />
-        : 
-        null 
-      }
-    </article>
+      <div>
+      <div className={"lContainer"+(this.isLoggedIn() ? ' hidden' : ' ')}>
+      <div className="lItem">
+          <div className="loginImage">
+            <img src={loginImg} width="300" style={{position: 'relative'}} alt="login"/>
+            {this.state.isLoading ? <div style={{display: 'flex',alignItems: 'center',justifyContent:'center',zIndex:9999}}><Space size="middle">
+            <Spin size="large" />
+          </Space></div> : null}
+          </div>
+          <div className="loginForm">
+            <h2>Login</h2>
+              <Form onFinish={this.handleSubmit} className="login-form">
+              <Form.Item name="userName" rules={[{ required: true, message: "Please enter your username" }]}>
+                <Input
+                  prefix={<UserOutlined />}
+                  placeholder="Username"
+                />
+              </Form.Item>
+              <Form.Item name="password" rules={[{ required: true, message: "Please enter your Password" }]}>
+                <Input
+                  prefix={<LockOutlined />}
+                  type="password"
+                  placeholder="Password"
+                />
+              </Form.Item>
+              <Form.Item>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  className="login-form-button"
+                >
+                  Log in
+                </Button>
+              </Form.Item>
+            </Form>
+          </div>
+      </div>
+      <div className="footer">
+        <a href="" target="_blank" rel="noopener noreferrer" className="footerLink">Powered by React</a>
+      </div>
+      </div>
+      </div>
     );
   }
 }
-export default Form.create({})(Login);
+
+
+export default Login;

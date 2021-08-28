@@ -1,4 +1,5 @@
 import customHttp from "../helpers/CustomHttp";
+import Cookie from "js.cookie";
 
 export const slideActions = {
   fetchSlides,
@@ -14,6 +15,7 @@ function fetchSlides() {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
+      "Authorization": Cookie.get("accesstoken")
 
     },
     url: `/phapp/slides`,
@@ -28,7 +30,8 @@ function createSlide(values) {
     method: "POST",
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json", // TODO: verify from request headers
+      "Content-Type": "application/json",
+      "Authorization": Cookie.get("accesstoken") // TODO: verify from request headers
     },
     url: `phapp/slide`,
     data: values,
@@ -43,7 +46,8 @@ function showSlide(id) {
     method: "GET",
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json", // TODO: verify from request headers
+      "Content-Type": "application/json",
+      "Authorization": Cookie.get("accesstoken") // TODO: verify from request headers
     },
     url: `phapp/slides`,
   };
@@ -57,7 +61,8 @@ function updateSlide(values, id) {
     method: "PUT",
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json", // TODO: verify from request headers
+      "Content-Type": "application/json",
+      "Authorization": Cookie.get("accesstoken") // TODO: verify from request headers
     },
     url: `phapp/slide/${id}`,
     data: values,
@@ -72,7 +77,8 @@ function deleteSlide(id) {
     method: "DELETE",
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json", // TODO: verify from request headers
+      "Content-Type": "application/json",
+      "Authorization": Cookie.get("accesstoken") // TODO: verify from request headers
     },
     url: `phapp/slide/${id}`,
   };

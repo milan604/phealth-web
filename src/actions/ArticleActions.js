@@ -1,4 +1,5 @@
 import customHttp from "../helpers/CustomHttp";
+import Cookie from "js.cookie";
 
 export const articleActions = {
   fetchArticles,
@@ -14,6 +15,7 @@ function fetchArticles() {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
+      "Authorization": Cookie.get("accesstoken")
 
     },
     url: `/phapp/articles`,
@@ -28,7 +30,8 @@ function createArticle(values) {
     method: "POST",
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json", // TODO: verify from request headers
+      "Content-Type": "application/json",
+      "Authorization": Cookie.get("accesstoken") // TODO: verify from request headers
     },
     url: `phapp/article`,
     data: values,
@@ -43,7 +46,8 @@ function showArticle(id) {
     method: "GET",
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json", // TODO: verify from request headers
+      "Content-Type": "application/json",
+      "Authorization": Cookie.get("accesstoken") // TODO: verify from request headers
     },
     url: `phapp/articles`,
   };
@@ -57,7 +61,8 @@ function updateArticle(values, id) {
     method: "PUT",
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json", // TODO: verify from request headers
+      "Content-Type": "application/json",
+      "Authorization": Cookie.get("accesstoken") // TODO: verify from request headers
     },
     url: `phapp/article/${id}`,
     data: values,
@@ -72,7 +77,8 @@ function deleteArticle(id) {
     method: "DELETE",
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json", // TODO: verify from request headers
+      "Content-Type": "application/json",
+      "Authorization": Cookie.get("accesstoken") // TODO: verify from request headers
     },
     url: `phapp/article/${id}`,
   };

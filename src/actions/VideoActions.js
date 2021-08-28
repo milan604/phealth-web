@@ -1,4 +1,5 @@
 import customHttp from "../helpers/CustomHttp";
+import Cookie from "js.cookie";
 
 export const videoActions = {
   fetchVideos,
@@ -14,6 +15,7 @@ function fetchVideos() {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
+      "Authorization": Cookie.get("accesstoken")
 
     },
     url: `/phapp/videos`,
@@ -28,7 +30,8 @@ function createVideo(values) {
     method: "POST",
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json", // TODO: verify from request headers
+      "Content-Type": "application/json",
+      "Authorization": Cookie.get("accesstoken") // TODO: verify from request headers
     },
     url: `phapp/video`,
     data: values,
@@ -43,7 +46,8 @@ function showVideo(id) {
     method: "GET",
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json", // TODO: verify from request headers
+      "Content-Type": "application/json",
+      "Authorization": Cookie.get("accesstoken") // TODO: verify from request headers
     },
     url: `phapp/videos`,
   };
@@ -57,7 +61,8 @@ function updateVideo(values, id) {
     method: "PUT",
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json", // TODO: verify from request headers
+      "Content-Type": "application/json",
+      "Authorization": Cookie.get("accesstoken") // TODO: verify from request headers
     },
     url: `phapp/video/${id}`,
     data: values,
@@ -72,7 +77,8 @@ function deleteVideo(id) {
     method: "DELETE",
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json", // TODO: verify from request headers
+      "Content-Type": "application/json",
+      "Authorization": Cookie.get("accesstoken") // TODO: verify from request headers
     },
     url: `phapp/video/${id}`,
   };

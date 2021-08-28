@@ -1,4 +1,5 @@
 import customHttp from "../helpers/CustomHttp";
+import Cookie from "js.cookie";
 
 export const vacancyActions = {
   fetchVacancies,
@@ -14,6 +15,7 @@ function fetchVacancies() {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
+      "Authorization": Cookie.get("accesstoken")
 
     },
     url: `/phapp/vacancies`,
@@ -28,7 +30,8 @@ function createVacancy(values) {
     method: "POST",
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json", // TODO: verify from request headers
+      "Content-Type": "application/json",
+      "Authorization": Cookie.get("accesstoken") // TODO: verify from request headers
     },
     url: `phapp/vacancy`,
     data: values,
@@ -43,7 +46,8 @@ function showVacancy(id) {
     method: "GET",
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json", // TODO: verify from request headers
+      "Content-Type": "application/json",
+      "Authorization": Cookie.get("accesstoken") // TODO: verify from request headers
     },
     url: `phapp/vacancies`,
   };
@@ -57,7 +61,8 @@ function updateVacancy(values, id) {
     method: "PUT",
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json", // TODO: verify from request headers
+      "Content-Type": "application/json",
+      "Authorization": Cookie.get("accesstoken") // TODO: verify from request headers
     },
     url: `phapp/vacancy/${id}`,
     data: values,
@@ -72,7 +77,8 @@ function deleteVacancy(id) {
     method: "DELETE",
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json", // TODO: verify from request headers
+      "Content-Type": "application/json",
+      "Authorization": Cookie.get("accesstoken") // TODO: verify from request headers
     },
     url: `phapp/vacancy/${id}`,
   };
