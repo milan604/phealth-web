@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import {Switch, Route, BrowserRouter as Router} from 'react-router-dom';
+import {Switch, Route, HashRouter as Router} from 'react-router-dom';
 import {PrivateRoute} from '../PrivateRoute';
-
+import {PublicRoute} from '../PublicRoute';
 import Home from '../Home/Home';
 import Book from '../Books/Index';
 import Video from '../Videos/Index';
@@ -31,8 +31,8 @@ class App extends Component {
     return (
       <Router>
         <Switch>
-        <Route exact path="/login" component={Login} />
-          <PrivateRoute exact path="/" component={Home} />
+          <PublicRoute exact path="/" component={Login} />
+          <PrivateRoute exact path="/home" component={Home} />
           <PrivateRoute exact path="/books" component={Book} />
           <PrivateRoute exact path="/videos" component={Video} />
           <PrivateRoute exact path="/slides" component={Slide} />

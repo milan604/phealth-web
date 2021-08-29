@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
 // import {materialActions} from '../../actions/materialActions';
-import {Table, Divider, Modal, Tooltip} from 'antd';
+import {Table, Divider, Modal, Tooltip, Space, Spin} from 'antd';
 import Show from './Show';
 import Edit from './Edit';
 import {Link} from 'react-router-dom';
 import {EyeOutlined, EditOutlined, DeleteOutlined} from '@ant-design/icons';
 import {success, error} from '../../helpers/Notification';
+import { materialActions } from "../../actions/MaterialActions";
+import { getStorage, ref, deleteObject } from "firebase/storage";
 
 const {confirm} = Modal;
 
@@ -18,6 +20,7 @@ export default class List extends Component {
       showVisible: false,
       editButton: false,
       material: {},
+      isLoading: false,
     };
   }
 
@@ -35,31 +38,58 @@ export default class List extends Component {
     this.setState ({editVisible: false, showVisible: false});
   };
 
-  // deleteMaterial = materialId => {
-  //   materialActions.deleteMaterial (materialId).then (response => {
-  //     if (response.status === 204) {
-  //       materialActions.fetchMaterials ().then (response => {
-  //         this.setState ({materials: response.data});
-  //         success ('Material has been sucessfully deleted.');
-  //       });
-  //     } else {
-  //       error (
-  //         response.data.error || 'Something went wrong. Please try again.'
-  //       );
-  //     }
-  //   });
-  // };
+  deleteMaterial = (materialId, uploadID) => {
+    this.setState({
+      isLoading: true
+    })
+    const storage = getStorage();
+      const deleteRef = ref(storage, 'materials/'+uploadID);
+      deleteObject(deleteRef).then(() => {
+        materialActions.deleteMaterial (materialId).then (response => {
+          if (response.status === 200) {
+            materialActions.fetchMaterials ().then (response => {
+              this.setState ({materials: response.data});
+              success ('Material has been sucessfully deleted.');
+            });
+          } else {
+            error (
+              response.data.error || 'Something went wrong. Please try again.'
+            );
+          }
+        });
+        this.setState({
+          isLoading: false
+        })
+      }).catch((err) => {
+        error("Error Deleting File From Storage")
+        materialActions.deleteMaterial (materialId).then (response => {
+          if (response.status === 200) {
+            materialActions.fetchMaterials ().then (response => {
+              this.setState ({materials: response.data});
+              success ('Material has been sucessfully deleted.');
+            });
+          } else {
+            error (
+              response.data.error || 'Something went wrong. Please try again.'
+            );
+          }
+        });
+        this.setState({
+          isLoading: false
+        })
+      });
+  };
 
-  // showConfirm = material => {
-  //   confirm ({
-  //     title: 'Do you Want to delete this material ?',
-  //     content: `Material title =>  ${material.title}`,
-  //     onOk: () => this.deleteMaterial (material.id),
-  //     onCancel () {
-  //       console.log ('Cancel');
-  //     },
-  //   });
-  // };
+  showConfirm = material => {
+    confirm ({
+      title: 'Do you Want to delete this material ?',
+      content: `Material title =>  ${material.title}`,
+      onOk: () => this.deleteMaterial (material.id, material.uploadID),
+      onCancel () {
+        console.log ('Cancel');
+      },
+    });
+  };
 
   formatValues = values => {
     Object.entries (values).forEach (([key, value]) => {
@@ -70,35 +100,24 @@ export default class List extends Component {
     return values;
   };
 
-  handleEdit = e => {
-    // e.preventDefault ();
-    // const {form} = this.formRef.props;
-    // form.validateFields ((err, values) => {
-    //   if (!err) {
-    //     this.setState ({editButton: true});
-    //     materialActions
-    //       .updateMaterial (
-    //         this.formatValues (values),
-    //         this.state.material.id
-    //       )
-    //       .then (response => {
-    //         if (response.status === 200) {
-    //           materialActions.fetchMaterials ().then (response => {
-    //             this.setState ({
-    //               materials: response.data,
-    //               editVisible: false,
-    //             });
-    //           });
-    //           success ('Material has been sucessfully updated.');
-    //         } else {
-    //           error (
-    //             response.data.error || 'Something went wrong. Please try again.'
-    //           );
-    //         }
-    //         this.setState ({editButton: false});
-    //       });
-    //   }
-    // });
+  handleEdit = (values) => {
+    this.setState({ editButton: true });
+        materialActions.updateMaterial(values, this.state.material.id).then((response) => {
+          if (response.status === 200) {
+            materialActions.fetchMaterials().then((response) => {
+              this.setState({
+                materials: response.data,
+                editVisible: false,
+              });
+            });
+            success("Material has been sucessfully updated.");
+          } else {
+            error(
+              response.data.error || "Something went wrong. Please try again."
+            );
+          }
+          this.setState({ editButton: false });
+        });
   };
 
   componentDidUpdate (prevProps) {
@@ -129,11 +148,11 @@ export default class List extends Component {
                 </Link>
               </Tooltip>
               <Divider type="vertical" />
-              <Tooltip title="Edit Material">
+              {/* <Tooltip title="Edit Material">
                 <Link onClick={() => this.setEditModalVisible (record)}>
                   <EditOutlined />
                 </Link>
-              </Tooltip>
+              </Tooltip> */}
               <Divider type="vertical" />
               <Tooltip title="Delete Material">
                 <Link onClick={() => this.showConfirm (record)}>
@@ -149,6 +168,9 @@ export default class List extends Component {
 
     return (
       <div>
+        {this.state.isLoading ? <div style={{display: 'flex',alignItems: 'center',justifyContent:'center',zIndex:9999}}><Space size="middle">
+            <Spin size="large" />
+          </Space></div> : null}
         <Table
           columns={columns}
           dataSource={materials}

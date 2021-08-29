@@ -1,7 +1,7 @@
 import React from 'react'
 import { Row, Col, Divider, Alert, Modal } from "antd";
 
-const Show = (showVisible, onCancel, material) => {
+const Show = ({showVisible, onCancel, material}) => {
   return (
 <Modal
         title=""
@@ -39,17 +39,34 @@ const Show = (showVisible, onCancel, material) => {
                 type="info"
                 showIcon
               />
-            </Col>
-          </Row>
-          <Divider />
-          <Row>
-            <Col offset={1} span={22}>
-            <Alert
-                message="Left Icon"
-                description={<img src={material.logo} alt="logo" />}
+              <Divider />
+              <Alert
+                message="Organization"
+                description={material.organization}
                 type="info"
                 showIcon
-              /> 
+              />
+              <Divider />
+              <Alert
+                message="Author"
+                description={material.author}
+                type="info"
+                showIcon
+              />
+              <Divider />
+              <Alert
+                message="Type"
+                description={material.type}
+                type="info"
+                showIcon
+              />
+              <Divider />
+              <Alert
+                message="File Link"
+                description={material.link}
+                type="info"
+                showIcon
+              />
             </Col>
           </Row>
         </div>

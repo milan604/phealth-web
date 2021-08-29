@@ -27,5 +27,5 @@ function logout() {
     Cookie.remove('expiry', { path: '/' })
     Cookie.remove('role', { path: '/' })
     Cookie.remove('uid', { path: '/' })
-    window.location.href = '/login'
+    window.location.href = '/'
 }

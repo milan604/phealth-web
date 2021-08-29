@@ -62,11 +62,7 @@ class Login extends Component {
               Cookie.remove('expiry', { path: '/' })
               Cookie.remove('role', { path: '/' })
               Cookie.remove('uid', { path: '/' })
-              if (window.location.href.match(/\/login/)){
-                  error('Invalid Credentials. Please try again.')
-              }else{
-                  window.location.href = '/login'
-              }
+              this.props.history.push("/");
             }
             Cookie.set("accesstoken", response.data["token"], {
               expires: 7,
@@ -81,7 +77,7 @@ class Login extends Component {
             this.setState({
               isLoading: false
             })
-            this.props.history.push("/");
+            this.props.history.push("/home");
           });
         }
 
