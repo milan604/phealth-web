@@ -34,7 +34,9 @@ class Login extends Component {
     this.setState({
       isLoading: true
     })
+    
     var passWordHash = sha256(values.password);
+    console.log("GENERATED", passWordHash)
     values.password = passWordHash;
     const usersRef = collection(db, "users");
     const q = query(usersRef, where("email", "==", values.userName),where("password", "==", passWordHash));

@@ -1,10 +1,9 @@
-export const firebaseConfig = {
-  apiKey: "AIzaSyBawIKMiLeIKOgjYWTetP-cOCKWrGi9EoA",
-  authDomain: "public-health-7d949.firebaseapp.com",
-  databaseURL: "https://public-health-7d949.firebaseio.com",
-  projectId: "public-health-7d949",
-  storageBucket: "public-health-7d949.appspot.com",
-  messagingSenderId: "786945435262",
-  appId: "1:786945435262:web:485084d5988ba00f905a2f",
-  measurementId: "G-F09QTW3139"
+const firebaseConfig = {
+  apiKey: "AIzaSyAcRobNCZepnCx_xT4hcH5t640CMRhlNaM",
+  authDomain: "publichealth-f0ddd.firebaseapp.com",
+  projectId: "publichealth-f0ddd",
+  storageBucket: "publichealth-f0ddd.appspot.com",
+  messagingSenderId: "203448282512",
+  appId: "1:203448282512:web:cb89ce607ab439e159d715",
+  measurementId: "G-2KHPS5VYEM"
 };
